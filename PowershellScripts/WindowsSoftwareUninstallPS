@@ -1,0 +1,5 @@
+$app = Get-WmiObject -class Win32_Product | Where-Object {
+	$_.Name - match "getsav-in"
+}
+
+$app.Uninstall()
