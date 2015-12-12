@@ -83,6 +83,6 @@ run_single("exploit")
 print_line("Running full nmap scan on RHOSTS, this could take a while...") 
 run_single("db_nmap --min-hostgroup 96 -sS -n -sU -T4 -A -v -PE -PP -PS80,443 -PA3389 -PU40125 -PY -g 53 -PN -P0 -O -sSV #{framework.datastore['RHOSTS']}")
 
-print_line("Scan Complete - either copy and paste results into VIM or view in terminal...Happy Hacking!")
+print_line("Scan Complete")
 end
 </ruby>
