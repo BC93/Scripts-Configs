@@ -1,0 +1,5 @@
+cd C:\\Windows
+
+wget -Uri https://azaservice.hostedrmm.com/Labtech/Deployment.aspx?probe=1 -OutFile InstallAgent.exe
+
+Start-Process "./AgentInstall.exe" -Argument-List "/s" -Wait
